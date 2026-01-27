@@ -52,6 +52,27 @@ public final class BinaryResourceFile implements SerializableResource {
         return chunks;
     }
 
+    /**
+     * Add a new sub-chunk to this chunk.
+     * @param index The index to insert the new chunk at.
+     * @param chunk A new chunk that is allowed here.
+     * @throws IndexOutOfBoundsException If the index is out of range (`0 <= index <= size`)
+     */
+    public void addChunk(int index, Chunk chunk) {
+        if (index < 0 || index > chunks.getSize()) {
+            throw new IndexOutOfBoundsException("Cannot insert new chunk out of bounds!");
+        }
+
+        chunks.add(index, chunk);
+    }
+
+    /**
+     * Appends a new sub-chunk to the end of this chunk.
+     * @param chunk A new chunk that is allowed here.
+     */
+    public void appendChunk(Chunk chunk) {
+        chunks.add(chunk);
+    }
 
     @Override
     public byte[] toByteArray() {

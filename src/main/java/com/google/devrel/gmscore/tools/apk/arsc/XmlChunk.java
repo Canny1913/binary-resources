@@ -28,6 +28,10 @@ import java.nio.ByteBuffer;
  */
 public final class XmlChunk extends ChunkWithChunks {
 
+    public XmlChunk(@Nullable Chunk parent) {
+        super(Chunk.METADATA_SIZE, parent);
+    }
+
     XmlChunk(ByteBuffer buffer, @Nullable Chunk parent) {
         super(buffer, parent);
     }

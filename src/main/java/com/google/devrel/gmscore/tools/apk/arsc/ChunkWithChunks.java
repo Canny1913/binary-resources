@@ -30,6 +30,10 @@ public abstract class ChunkWithChunks extends Chunk {
 
     private final MutableObjectList<Chunk> chunks = new MutableObjectList<>();
 
+    protected ChunkWithChunks(int headerSize, @Nullable Chunk parent) {
+        super(headerSize, parent);
+    }
+
     protected ChunkWithChunks(ByteBuffer buffer, @Nullable Chunk parent) {
         super(buffer, parent);
     }
@@ -73,6 +77,14 @@ public abstract class ChunkWithChunks extends Chunk {
         }
 
         chunks.add(index, chunk);
+    }
+
+    /**
+     * Appends a new sub-chunk to the end of this chunk.
+     * @param chunk A new chunk that is allowed here.
+     */
+    public final void appendChunk(Chunk chunk) {
+        chunks.add(chunk);
     }
 
     @Override

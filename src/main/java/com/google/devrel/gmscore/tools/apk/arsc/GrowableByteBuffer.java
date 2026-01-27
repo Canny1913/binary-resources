@@ -18,16 +18,11 @@ public class GrowableByteBuffer {
     }
 
     private void ensureSpace(int needed) {
-        float EXPAND_FACTOR = 1.5f;
-
         if (buffer.remaining() >= needed) {
             return;
         }
 
-        int newCapacity = buffer.capacity();
-        while (newCapacity < (buffer.capacity() + needed)) {
-            newCapacity = (int) (newCapacity * EXPAND_FACTOR);
-        }
+        int newCapacity = (int) ((buffer.capacity() + needed) * 1.5f);
 
         ByteBuffer expanded = ByteBuffer.allocate(newCapacity);
         expanded.order(buffer.order());

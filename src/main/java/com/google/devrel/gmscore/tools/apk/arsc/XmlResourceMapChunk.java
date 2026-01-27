@@ -16,11 +16,11 @@
 
 package com.google.devrel.gmscore.tools.apk.arsc;
 
+import androidx.collection.MutableIntList;
+
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Represents an XML resource map chunk.
@@ -39,7 +39,12 @@ public class XmlResourceMapChunk extends Chunk {
      * Contains a mapping of attributeID to resourceID. For example, the attributeID 2 refers to the
      * resourceID returned by {@code resources.get(2)}.
      */
-    private final List<Integer> resources = new ArrayList<>();
+    private final MutableIntList resources = new MutableIntList();
+
+    public XmlResourceMapChunk(int[] resources, @Nullable Chunk parent) {
+        super(8, parent);
+        this.resources.addAll(resources);
+    }
 
     protected XmlResourceMapChunk(ByteBuffer buffer, @Nullable Chunk parent) {
         super(buffer, parent);
@@ -51,19 +56,19 @@ public class XmlResourceMapChunk extends Chunk {
         resources.addAll(enumerateResources(buffer));
     }
 
-    private List<Integer> enumerateResources(ByteBuffer buffer) {
+    private int[] enumerateResources(ByteBuffer buffer) {
         int resourceCount = (getOriginalChunkSize() - getOriginalHeaderSize()) / RESOURCE_SIZE;
-        List<Integer> result = new ArrayList<>(resourceCount);
+        int[] results = new int[resourceCount];
+
         int offset = getOriginalOffset() + getOriginalHeaderSize();
         buffer.mark();
         buffer.position(offset);
-
         for (int i = 0; i < resourceCount; ++i) {
-            result.add(buffer.getInt());
+            results[i] = buffer.getInt();
         }
-
         buffer.reset();
-        return result;
+
+        return results;
     }
 
     /**
@@ -80,8 +85,8 @@ public class XmlResourceMapChunk extends Chunk {
 
     @Override
     protected void writePayload(GrowableByteBuffer buffer) {
-        for (Integer resource : resources) {
-            buffer.putInt(resource);
+        for (int i = 0; i < resources.getSize(); i++) {
+            buffer.putInt(resources.get(i));
         }
     }
 }

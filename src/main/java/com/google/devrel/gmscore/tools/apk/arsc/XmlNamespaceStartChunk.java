@@ -25,6 +25,10 @@ import java.nio.ByteBuffer;
  */
 public final class XmlNamespaceStartChunk extends XmlNamespaceChunk {
 
+    public XmlNamespaceStartChunk(int prefixIndex, int uriIndex, @Nullable Chunk parent) {
+        super(prefixIndex, uriIndex, parent);
+    }
+
     XmlNamespaceStartChunk(ByteBuffer buffer, @Nullable Chunk parent) {
         super(buffer, parent);
     }

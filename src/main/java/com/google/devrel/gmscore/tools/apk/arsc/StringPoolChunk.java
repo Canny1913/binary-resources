@@ -101,6 +101,16 @@ public final class StringPoolChunk extends Chunk {
      */
     private int writtenChunkOffset;
 
+    public StringPoolChunk(@Nullable Chunk parent) {
+        super(28, parent);
+        stringCount = 0;
+        styleCount = 0;
+        flags = 0;
+        stringsStart = -1;
+        stylesStart = -1;
+        stringOffsets = new int[0];
+    }
+
     StringPoolChunk(ByteBuffer buffer, @Nullable Chunk parent) {
         super(buffer, parent);
         stringCount = buffer.getInt();
@@ -131,7 +141,7 @@ public final class StringPoolChunk extends Chunk {
      * @return Index of the string, or -1 if not found.
      */
     public int indexOf(String string) {
-        byte[] bytes = srcBuffer.array();
+        byte[] bytes = srcBuffer != null ? srcBuffer.array() : null;
         byte[] encodedString = BinaryResourceString.encodeString(string, getStringType());
 
         for (int i = 0; i < stringOffsets.length; i++) {

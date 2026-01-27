@@ -16,6 +16,9 @@
 
 package com.google.devrel.gmscore.tools.apk.arsc;
 
+import androidx.collection.MutableObjectList;
+import androidx.collection.ObjectList;
+
 import com.google.common.base.Preconditions;
 
 import org.jetbrains.annotations.Nullable;
@@ -68,7 +71,7 @@ public final class XmlStartElementChunk extends XmlNodeChunk {
     /**
      * The XML attributes associated with this element.
      */
-    private final List<XmlAttribute> attributes;
+    private final MutableObjectList<XmlAttribute> attributes;
 
     public XmlStartElementChunk(int namespaceIndex,
                                 int nameIndex,
@@ -77,7 +80,7 @@ public final class XmlStartElementChunk extends XmlNodeChunk {
                                 int styleIndex,
                                 List<XmlAttribute> attributes,
                                 @Nullable Chunk parent) {
-        super(16, -1, -1, parent);
+        super(16, -1, -1, parent); // TODO: accurate header size?
         this.namespace = namespaceIndex;
         this.name = nameIndex;
         this.attributeStart = -1;
@@ -85,7 +88,8 @@ public final class XmlStartElementChunk extends XmlNodeChunk {
         this.idIndex = idIndex;
         this.classIndex = classIndex;
         this.styleIndex = styleIndex;
-        this.attributes = attributes;
+        this.attributes = new MutableObjectList<>(attributes.size());
+        this.attributes.addAll(attributes);
     }
 
     XmlStartElementChunk(ByteBuffer buffer, @Nullable Chunk parent) {
@@ -97,7 +101,7 @@ public final class XmlStartElementChunk extends XmlNodeChunk {
         Preconditions.checkState(attributeSize == XmlAttribute.SIZE,
                 "attributeSize is wrong size. Got %s, want %s", attributeSize, XmlAttribute.SIZE);
         attributeCount = (buffer.getShort() & 0xFFFF);
-        attributes = new ArrayList<>(attributeCount);
+        attributes = new MutableObjectList<>(attributeCount);
 
         // The following indices are 1-based and need to be adjusted.
         idIndex = (buffer.getShort() & 0xFFFF) - 1;
@@ -151,8 +155,8 @@ public final class XmlStartElementChunk extends XmlNodeChunk {
     /**
      * Returns an unmodifiable list of this XML element's attributes.
      */
-    public List<XmlAttribute> getAttributes() {
-        return Collections.unmodifiableList(attributes);
+    public MutableObjectList<XmlAttribute> getAttributes() {
+        return attributes;
     }
 
     @Override
@@ -167,12 +171,12 @@ public final class XmlStartElementChunk extends XmlNodeChunk {
         buffer.putInt(name);
         buffer.putShort((short) XmlAttribute.SIZE); // attribute start
         buffer.putShort((short) XmlAttribute.SIZE);
-        buffer.putShort((short) attributes.size());
+        buffer.putShort((short) attributes.count());
         buffer.putShort((short) (idIndex + 1));
         buffer.putShort((short) (classIndex + 1));
         buffer.putShort((short) (styleIndex + 1));
-        for (XmlAttribute attribute : attributes) {
-            attribute.writeTo(buffer);
+        for (int i = 0; i < attributes.count(); i++) {
+            attributes.get(i).writeTo(buffer);
         }
     }
 

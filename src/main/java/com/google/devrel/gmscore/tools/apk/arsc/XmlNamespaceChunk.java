@@ -35,6 +35,12 @@ public abstract class XmlNamespaceChunk extends XmlNodeChunk {
      */
     private final int uri;
 
+    protected XmlNamespaceChunk(int prefixIndex, int uriIndex, @Nullable Chunk parent) {
+        super(16, -1, -1, parent);
+        this.prefix = prefixIndex;
+        this.uri = uriIndex;
+    }
+
     protected XmlNamespaceChunk(ByteBuffer buffer, @Nullable Chunk parent) {
         super(buffer, parent);
         prefix = buffer.getInt();
