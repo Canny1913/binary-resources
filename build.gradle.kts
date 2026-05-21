@@ -1,43 +1,21 @@
 plugins {
-    id("maven-publish")
-    id("com.android.library") version "8.3.0"
+    java
+    `maven-publish`
 }
 
 version = "2.1.0"
 
-android {
-    compileSdk = 34
-    namespace = "com.aliucord.binaryresources"
-
-    defaultConfig {
-        minSdk = 21 // This can likely be lower
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
-
-    buildFeatures {
-        buildConfig = false
-        resValues = false
-    }
-
-    publishing {
-        singleVariant("release") {
-            withSourcesJar()
-        }
-    }
-
-    lint {
-        abortOnError = false
-        checkReleaseBuilds = false
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
 }
 
 dependencies {
-    api("com.google.guava:guava:33.0.0-android")
-    implementation("androidx.collection:collection:1.4.0")
+    implementation("com.google.guava:guava:33.6.0-android")
+    implementation("androidx.collection:collection:1.6.0")
 
     testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
 }
 
 afterEvaluate {
@@ -47,13 +25,13 @@ afterEvaluate {
                 groupId = "com.aliucord"
                 artifactId = "binary-resources"
 
-                from(components["release"])
+                from(components["java"])
             }
         }
 
         repositories {
-            val username = System.getenv("MAVEN_RELEASE_USERNAME")
-            val password = System.getenv("MAVEN_RELEASE_PASSWORD")
+            val username = System.getenv("MAVEN_USERNAME")
+            val password = System.getenv("MAVEN_PASSWORD")
 
             if (username != null && password != null) {
                 maven {
@@ -61,7 +39,7 @@ afterEvaluate {
                         this.username = username
                         this.password = password
                     }
-                    setUrl("https://maven.aliucord.com/releases")
+                    setUrl("https://mvn.janisslsm.id.lv/#/canny")
                 }
             } else {
                 mavenLocal()

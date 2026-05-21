@@ -16,8 +16,6 @@
 
 package com.google.devrel.gmscore.tools.apk.arsc;
 
-import android.os.Build;
-
 import androidx.collection.*;
 
 import org.jetbrains.annotations.Nullable;
@@ -147,18 +145,10 @@ public final class StringPoolChunk extends Chunk {
         for (int i = 0; i < stringOffsets.length; i++) {
             if (bytes.length < stringOffsets[i] + encodedString.length) continue;
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                // noinspection Since15
-                if (Arrays.equals(
-                        bytes, stringOffsets[i], stringOffsets[i] + encodedString.length,
-                        encodedString, 0, encodedString.length)) {
-                    return i;
-                }
-            } else {
-                if (ByteBuffer.wrap(bytes, stringOffsets[i], encodedString.length)
-                        .equals(ByteBuffer.wrap(encodedString))) {
-                    return i;
-                }
+            if (Arrays.equals(
+                    bytes, stringOffsets[i], stringOffsets[i] + encodedString.length,
+                    encodedString, 0, encodedString.length)) {
+                return i;
             }
         }
 
