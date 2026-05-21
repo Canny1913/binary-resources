@@ -68,6 +68,13 @@ public final class TypeSpecChunk extends Chunk {
     }
 
     /**
+     * Returns the resource configuration masks.
+     */
+    public MutableIntList getResourceFlags() {
+        return resourceFlags;
+    }
+
+    /**
      * Get spec flags for a specific resource
      *
      * @param index TODO this
