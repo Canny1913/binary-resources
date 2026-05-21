@@ -3,7 +3,7 @@ plugins {
     `maven-publish`
 }
 
-version = "2.1.0"
+version = "2.1.1"
 
 java {
     toolchain {
@@ -22,7 +22,7 @@ afterEvaluate {
     publishing {
         publications {
             register(project.name, MavenPublication::class.java) {
-                groupId = "com.aliucord"
+                groupId = "com.aliucore"
                 artifactId = "binary-resources"
 
                 from(components["java"])
@@ -39,7 +39,7 @@ afterEvaluate {
                         this.username = username
                         this.password = password
                     }
-                    setUrl("https://mvn.janisslsm.id.lv/#/canny")
+                    setUrl("https://mvn.janisslsm.id.lv/canny")
                 }
             } else {
                 mavenLocal()
