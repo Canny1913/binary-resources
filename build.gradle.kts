@@ -22,7 +22,7 @@ afterEvaluate {
     publishing {
         publications {
             register(project.name, MavenPublication::class.java) {
-                groupId = "com.aliucord"
+                groupId = "io.github.canny1913"
                 artifactId = "binary-resources"
 
                 from(components["java"])
@@ -39,7 +39,7 @@ afterEvaluate {
                         this.username = username
                         this.password = password
                     }
-                    setUrl("https://mvn.janisslsm.id.lv/#/canny")
+                    setUrl("https://maven.aliucord.com/snapshots")
                 }
             } else {
                 mavenLocal()
